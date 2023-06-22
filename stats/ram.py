@@ -30,3 +30,18 @@ class SwapStat(NvidiaStat):
             ("Total Swap (MB)", usage[1][:-2]),
             ("Cached Swap (MB)", cached)
         ]
+
+class IRamStat(NvidiaStat):
+    _identifier = "IRAM"
+    _num_args = 4
+
+    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+        if not self.arg_length_matches(args):
+            return []
+
+        usage = args[1].split('/')
+
+        return [
+            ("Used IRAM (kB)", usage[0]),
+            ("Available IRAM (kB)", usage[1][:-2])
+        ]
