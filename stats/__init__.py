@@ -1,6 +1,7 @@
 from .base import *
 from .ram import *
 from .cpu import *
+from .engines import *
 
 class StatContainer:
     def __init__(self):
@@ -8,7 +9,9 @@ class StatContainer:
             ram.RamStat(),
             ram.SwapStat(),
             ram.IRamStat(),
-            cpu.CPUUsageStat()
+            cpu.CPUUsageStat(),
+            engines.ExtMemControllerFreqStat(),
+            engines.GR3DFreqStat()
         ]
     
     def find_stat(self, identifier) -> NvidiaStat | None:
