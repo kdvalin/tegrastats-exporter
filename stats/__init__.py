@@ -11,7 +11,8 @@ class StatContainer:
             ram.IRamStat(),
             cpu.CPUUsageStat(),
             engines.ExtMemControllerFreqStat(),
-            engines.GR3DFreqStat()
+            engines.GR3DFreqStat(),
+            engines.APEStats()
         ]
     
     def find_stat(self, identifier) -> NvidiaStat | None:

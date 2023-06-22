@@ -35,3 +35,15 @@ class GR3DFreqStat(NvidiaStat):
             )
 
         return output
+
+class APEStats(NvidiaStat):
+    _identifier = "APE"
+    _num_args = 2
+
+    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+        if not self.arg_length_matches(args):
+            return []
+        
+        return [
+            ("APE Frequency (MHz)", args[1])
+        ]
