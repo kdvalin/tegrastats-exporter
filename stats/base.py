@@ -15,7 +15,7 @@ class NvidiaStat:
         return self._num_args
 
     @abc.abstractclassmethod
-    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+    def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         return []
 
     def arg_length_matches  (self, args: List[str]) -> bool:

@@ -6,19 +6,19 @@ class ExtMemControllerFreqStat(NvidiaStat):
     _identifier = "EMC_FREQ"
     _num_args = 2
 
-    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+    def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         if not self.arg_length_matches(args):
             return []
 
         return [
-            ("EMC Frequency (MHz)", args[1][1:])
+            ("EMC Frequency (MHz)", int(args[1][1:]))
         ]
 
 class GR3DFreqStat(NvidiaStat):
     _identifier = "GR3D_FREQ"
     _num_args = 2
     
-    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+    def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         if not self.arg_length_matches(args):
             return []
         
@@ -26,12 +26,12 @@ class GR3DFreqStat(NvidiaStat):
         gpu_usage = details[1][1:-1]
 
         output = [
-            ("GPU Activation time (%)", details[0][:-1])
+            ("GPU Activation time (%)", int(details[0][:-1]))
         ]
 
         for (idx, gpu_clock) in enumerate(gpu_usage.split(',')):
             output.append(
-                (f"GPU{idx} Clock (MHz)", gpu_clock)
+                (f"GPU{idx} Clock (MHz)", int(gpu_clock))
             )
 
         return output
@@ -40,10 +40,10 @@ class APEStats(NvidiaStat):
     _identifier = "APE"
     _num_args = 2
 
-    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+    def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         if not self.arg_length_matches(args):
             return []
         
         return [
-            ("APE Frequency (MHz)", args[1])
+            ("APE Frequency (MHz)", int(args[1]))
         ]

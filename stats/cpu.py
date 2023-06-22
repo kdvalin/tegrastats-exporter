@@ -5,7 +5,7 @@ class CPUUsageStat(NvidiaStat):
     _identifier = "CPU"
     _num_args = 2
 
-    def parse(self, args: List[str]) -> List[Tuple[str, str]]:
+    def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         if not self.arg_length_matches(args):
             return []
         
@@ -15,14 +15,14 @@ class CPUUsageStat(NvidiaStat):
         for (idx, cpu) in enumerate(usage.split(',')):
             if cpu == "off":
                 output.extend([
-                    (f"CPU{idx} Usage", "0%"),
-                    (f"CPU{idx} Clock (MHz)", "0")
+                    (f"CPU{idx} Usage (%)", 0),
+                    (f"CPU{idx} Clock (MHz)", 0)
                 ])
             else:
                 cpu_info = cpu.split('@')
 
                 output.extend([
-                    (f"CPU{idx} Usage (%)", cpu_info[0][:-1]),
-                    (f"CPU{idx} Clock (MHz)", cpu_info[1])
+                    (f"CPU{idx} Usage (%)", int(cpu_info[0][:-1])),
+                    (f"CPU{idx} Clock (MHz)", int(cpu_info[1]))
                 ])
         return output
