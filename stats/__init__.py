@@ -1,3 +1,5 @@
+from typing import Union
+
 from .base import *
 from .ram import *
 from .cpu import *
@@ -17,7 +19,7 @@ class StatContainer:
             temps.TemperatureStat()
         ]
     
-    def find_stat(self, identifier) -> NvidiaStat | None:
+    def find_stat(self, identifier) -> Union[NvidiaStat, None]:
         for stat in self.stats:
             if stat.matches(identifier):
                 return stat
