@@ -3,7 +3,7 @@
 out_dir=$1
 interval=$2
 
-if [ ! `which tegrastats --help` ]; then
+if  ! command -v tegrastats > /dev/null; then
     echo "Missing tegrastats"
     exit 1
 fi
