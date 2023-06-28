@@ -18,7 +18,7 @@ class NvidiaStat:
     def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         return []
 
-    def arg_length_matches  (self, args: List[str]) -> bool:
+    def arg_length_matches(self, args: List[str]) -> bool:
         len_matches = self._num_args == len(args)
         if not len_matches:
             print(f"[{self._identifier}] Passed length does not match, skipping")
