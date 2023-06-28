@@ -12,28 +12,51 @@ def write_file(header: List[str], rows: List[list], output_file: str):
         writer.writerows(rows)
 
 
+def get_keys(line: str, stats_container: stats.StatContainer) -> List[str]:
+    args = line.strip().split(' ')
+    keys = ["Time"]
+
+    for i in range(len(args)):
+        stat = stats_container.find_stat(args[i])
+
+        if stat is not None:
+            stat_arg_end = i + stat.get_num_args()
+            data = stat.parse(args[i:stat_arg_end])
+
+            keys.extend([j[0] for j in data])
+    return keys
+
+
 def parse_file(input_file: str):
     cont = stats.StatContainer()
     with open(input_file, 'r') as f:
         lines = f.readlines()
 
-    first_line = True
-    keys = ["Time"]
+    keys = get_keys(lines[0], cont)
+    
     rows = []
+
     for line in lines:
         args = line.strip().split(' ')
         timestamp = args[0:2]
-        row = [' '.join(timestamp)]
+        row = [-1 for _ in keys]
+        row[0] = ' '.join(timestamp)
         
         for i in range(len(args)):
             key = args[i]
             stat_cont = cont.find_stat(key)
 
-            if stat_cont is not None:
-                data = stat_cont.parse(args[i:i+stat_cont.get_num_args()])
-                if first_line:
-                    keys.extend([i[0] for i in data])
-                row.extend([i[1] for i in data])
+            if stat_cont is None:
+                continue
+            data = stat_cont.parse(args[i:i+stat_cont.get_num_args()])
+
+            for entry in data:
+                header = entry[0]
+                val = entry[1]
+
+                val_idx = keys.index(header)
+                row[val_idx] = val
+
         rows.append(row)
         first_line = False
 
