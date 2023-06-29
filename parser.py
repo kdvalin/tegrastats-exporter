@@ -55,6 +55,10 @@ def parse_file(input_file: str):
                 val = entry[1]
 
                 val_idx = keys.index(header)
+
+                if val_idx < 0:
+                    keys.append(header)
+                    val_idx = keys.index(header)
                 row[val_idx] = val
 
         rows.append(row)
