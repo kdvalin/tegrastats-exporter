@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+import stats
+
 from typing import List
 import sys
-import stats
 import csv
 import argparse
+import logging
+import os
 
 def write_file(header: List[str], rows: List[list], output_file: str):
     with open(output_file, 'w', newline='') as f:
@@ -68,6 +71,9 @@ def parse_file(input_file: str):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO").upper())
+    logging.getLogger(__package__)
+    
     parser = argparse.ArgumentParser(
         prog="tegrastats-exporter",
         description="A tool to transform tegrastats output to a csv"
