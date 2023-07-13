@@ -1,10 +1,12 @@
 from typing import Union
+import logging
 
 from .base import *
 from .ram import *
 from .cpu import *
 from .engines import *
 from .temps import *
+from .power import *
 
 class StatContainer:
     def __init__(self):
@@ -16,11 +18,14 @@ class StatContainer:
             engines.ExtMemControllerFreqStat(),
             engines.GR3DFreqStat(),
             engines.APEStats(),
-            temps.TemperatureStat()
+            temps.TemperatureStat(),
+            power.PowerStat()
         ]
     
     def find_stat(self, identifier) -> Union[NvidiaStat, None]:
+        logger = logging.getLogger(__package__)
         for stat in self.stats:
             if stat.matches(identifier):
+                logger.info(f"Found match for identifier {stat.header()}: {identifier}")
                 return stat
         return None

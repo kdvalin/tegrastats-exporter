@@ -14,6 +14,17 @@ def write_file(header: List[str], rows: List[list], output_file: str):
         writer.writerow(header)
         writer.writerows(rows)
 
+def build_args(args: List[str], stat: stats.NvidiaStat, current: int):
+    stat_args = stat.get_num_args()
+
+    if stat_args < 0:
+        start = current + stat_args + 1
+        end = current + 1
+    else:
+        start = current
+        end = current + stat_args
+
+    return args[start:end]
 
 def get_keys(line: str, stats_container: stats.StatContainer) -> List[str]:
     args = line.strip().split(' ')
@@ -23,10 +34,14 @@ def get_keys(line: str, stats_container: stats.StatContainer) -> List[str]:
         stat = stats_container.find_stat(args[i])
 
         if stat is not None:
-            stat_arg_end = i + stat.get_num_args()
-            data = stat.parse(args[i:stat_arg_end])
+            data = stat.parse(build_args(args, stat, i))
+            for key in data:
+                keyname = key[0]
 
-            keys.extend([j[0] for j in data])
+                if keyname in keys:
+                    continue
+
+                keys.extend([keyname])
     return keys
 
 
@@ -51,7 +66,9 @@ def parse_file(input_file: str):
 
             if stat_cont is None:
                 continue
-            data = stat_cont.parse(args[i:i+stat_cont.get_num_args()])
+            
+            #Done to support backwards matching (IE easier to match against the 2nd+ arg instead of the first)
+            data = stat_cont.parse(build_args(args, stat_cont, i))
 
             for entry in data:
                 header = entry[0]
@@ -71,9 +88,9 @@ def parse_file(input_file: str):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO").upper())
+    logging.basicConfig(level=os.environ.get("LOGLEVEL", "WARNING").upper())
     logging.getLogger(__package__)
-    
+
     parser = argparse.ArgumentParser(
         prog="tegrastats-exporter",
         description="A tool to transform tegrastats output to a csv"
