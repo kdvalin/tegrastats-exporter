@@ -10,9 +10,18 @@ class ExtMemControllerFreqStat(NvidiaStat):
         if not self.arg_length_matches(args):
             return []
 
-        return [
-            ("EMC Frequency (MHz)", int(args[1][1:]))
+        (usage, _, freq) = args[1].partition('@')
+
+        output = [
+            ("EMC Frequency (MHz)", int(freq)),
         ]
+
+        if usage != "":
+            output.append(
+                ("EMC % Usage", int(usage[:-1]))
+            )
+
+        return output
 
 class GR3DFreqStat(NvidiaStat):
     _identifier = "GR3D_FREQ"
