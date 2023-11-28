@@ -26,22 +26,24 @@ def build_args(args: List[str], stat: stats.NvidiaStat, current: int):
 
     return args[start:end]
 
-def get_keys(line: str, stats_container: stats.StatContainer) -> List[str]:
-    args = line.strip().split(' ')
+def get_keys(file: str, stats_container: stats.StatContainer) -> List[str]:
     keys = ["Time"]
+    with open(file, 'r') as file:
+        for line in file:
+            args = line.strip().split(' ')
 
-    for i in range(len(args)):
-        stat = stats_container.find_stat(args[i])
+            for i in range(len(args)):
+                stat = stats_container.find_stat(args[i])
 
-        if stat is not None:
-            data = stat.parse(build_args(args, stat, i))
-            for key in data:
-                keyname = key[0]
+                if stat is not None:
+                    data = stat.parse(build_args(args, stat, i))
+                    for key in data:
+                        keyname = key[0]
 
-                if keyname in keys:
-                    continue
+                        if keyname in keys:
+                            continue
 
-                keys.extend([keyname])
+                        keys.extend([keyname])
     return keys
 
 
@@ -50,7 +52,7 @@ def parse_file(input_file: str):
     with open(input_file, 'r') as f:
         lines = f.readlines()
 
-    keys = get_keys(lines[0], cont)
+    keys = get_keys(input_file, cont)
     
     rows = []
 
