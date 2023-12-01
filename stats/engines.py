@@ -38,10 +38,15 @@ class GR3DFreqStat(NvidiaStat):
             ("GPU Activation time (%)", int(details[0][:-1]))
         ]
 
-        for (idx, gpu_clock) in enumerate(gpu_usage.split(',')):
+        if '[' not in details[1]:
             output.append(
-                (f"GPU{idx} Clock (MHz)", int(gpu_clock))
+                ("GPU Clock (MHz)", int(details[1]))
             )
+        else:
+            for (idx, gpu_clock) in enumerate(gpu_usage.split(',')):
+                output.append(
+                    (f"GPU{idx} Clock (MHz)", int(gpu_clock))
+                )
 
         return output
 

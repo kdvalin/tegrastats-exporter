@@ -39,7 +39,8 @@ class IRamStat(NvidiaStat):
         if not self.arg_length_matches(args):
             return []
 
-        usage = args[1].split('/')
+        current = args[1].split('(')[0]
+        usage = current.split('/')
 
         return [
             ("Used IRAM (kB)", int(usage[0])),
