@@ -33,7 +33,7 @@ class SwapStat(NvidiaStat):
 
 class IRamStat(NvidiaStat):
     _identifier = "IRAM"
-    _num_args = 4
+    _num_args = 3
 
     def parse(self, args: List[str]) -> List[Tuple[str, str]]:
         if not self.arg_length_matches(args):
