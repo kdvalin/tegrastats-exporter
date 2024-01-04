@@ -70,7 +70,10 @@ def parse_file(input_file: str):
                 continue
             
             #Done to support backwards matching (IE easier to match against the 2nd+ arg instead of the first)
-            data = stat_cont.parse(build_args(args, stat_cont, i))
+            stat_args = build_args(args, stat_cont, i)
+            if not stat_cont.args_match(stat_args): #TODO Remove this, this is for debug only
+                print("WARN: Stat args don't match!")
+            data = stat_cont.parse(stat_args)
 
             for entry in data:
                 header = entry[0]
