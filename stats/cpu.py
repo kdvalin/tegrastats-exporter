@@ -4,6 +4,10 @@ from .base import NvidiaStat
 class CPUUsageStat(NvidiaStat):
     _identifier = "CPU"
     _num_args = 2
+    
+    _args_regex = [
+        r"^\[((([0-9]+%@[0-9]+)|off)(,)?)+\]$"
+    ]
 
     def parse(self, args: List[str]) -> List[Tuple[str, int]]:
         if not self.arg_length_matches(args):

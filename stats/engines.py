@@ -12,9 +12,12 @@ class ExtMemControllerFreqStat(NvidiaStat):
 
         (usage, _, freq) = args[1].partition('@')
 
-        output = [
-            ("EMC Frequency (MHz)", int(freq)),
-        ]
+        output = []
+
+        if freq != "":
+            output.append(
+                ("EMC Frequency (MHz)", int(freq)),
+            )
 
         if usage != "":
             output.append(
@@ -31,17 +34,25 @@ class GR3DFreqStat(NvidiaStat):
         if not self.arg_length_matches(args):
             return []
         
-        details = args[1].split('@')
-        gpu_usage = details[1][1:-1]
+        (percent, _, freq) = args[1].partition('@')
+        output = []
 
-        output = [
-            ("GPU Activation time (%)", int(details[0][:-1]))
-        ]
+        if percent != "":
+            percent = percent.replace("%", "")
+            output = [
+                ("GPU Activation time (%)", int(percent))
+            ]
 
-        for (idx, gpu_clock) in enumerate(gpu_usage.split(',')):
-            output.append(
-                (f"GPU{idx} Clock (MHz)", int(gpu_clock))
-            )
+        if freq != "":
+            if '[' not in freq:
+                output.append(
+                    ("GPU Clock (MHz)", int(freq))
+                )
+            else:
+                for (idx, gpu_clock) in enumerate(freq[1:-1].split(',')):
+                    output.append(
+                        (f"GPU{idx} Clock (MHz)", int(gpu_clock))
+                    )
 
         return output
 

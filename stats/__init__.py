@@ -7,6 +7,7 @@ from .cpu import *
 from .engines import *
 from .temps import *
 from .power import *
+from .timestamp import *
 
 class StatContainer:
     def __init__(self):
@@ -19,13 +20,13 @@ class StatContainer:
             engines.GR3DFreqStat(),
             engines.APEStats(),
             temps.TemperatureStat(),
-            power.PowerStat()
+            power.PowerStat(),
+            timestamp.Timestamp()
         ]
     
-    def find_stat(self, identifier) -> Union[NvidiaStat, None]:
+    def find_stat(self, identifier) -> NvidiaStat:
         logger = logging.getLogger(__package__)
         for stat in self.stats:
             if stat.matches(identifier):
                 logger.info(f"Found match for identifier {stat.header()}: {identifier}")
-                return stat
-        return None
+                yield stat
