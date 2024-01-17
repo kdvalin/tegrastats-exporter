@@ -7,6 +7,7 @@ from .cpu import *
 from .engines import *
 from .temps import *
 from .power import *
+from .timestamp import *
 
 class StatContainer:
     def __init__(self):
@@ -19,7 +20,8 @@ class StatContainer:
             engines.GR3DFreqStat(),
             engines.APEStats(),
             temps.TemperatureStat(),
-            power.PowerStat()
+            power.PowerStat(),
+            timestamp.Timestamp()
         ]
     
     def find_stat(self, identifier) -> NvidiaStat:

@@ -27,7 +27,7 @@ def build_args(args: List[str], stat: stats.NvidiaStat, current: int):
     return args[start:end]
 
 def get_keys(file: str, stats_container: stats.StatContainer) -> List[str]:
-    keys = ["Time"]
+    keys = []
     with open(file, 'r') as file:
         for line in file:
             args = line.strip().split(' ')
@@ -65,9 +65,7 @@ def parse_file(input_file: str):
 
     for line in lines:
         args = line.strip().split(' ')
-        timestamp = args[0:2]
         row = [-1 for _ in keys]
-        row[0] = ' '.join(timestamp)
         
         for i in range(len(args)):
             key = args[i]
