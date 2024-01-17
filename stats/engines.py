@@ -12,9 +12,12 @@ class ExtMemControllerFreqStat(NvidiaStat):
 
         (usage, _, freq) = args[1].partition('@')
 
-        output = [
-            ("EMC Frequency (MHz)", int(freq)),
-        ]
+        output = []
+
+        if freq != "":
+            output.append(
+                ("EMC Frequency (MHz)", int(freq)),
+            )
 
         if usage != "":
             output.append(
