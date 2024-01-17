@@ -6,7 +6,7 @@ class CPUUsageStat(NvidiaStat):
     _num_args = 2
     
     _args_regex = [
-        "^\[([0-9]+%@[0-9]+(,)?)+]$"
+        r"^\[((([0-9]+%@[0-9]+)|off)(,)?)+\]$"
     ]
 
     def parse(self, args: List[str]) -> List[Tuple[str, int]]:
