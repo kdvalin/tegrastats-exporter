@@ -34,22 +34,25 @@ class GR3DFreqStat(NvidiaStat):
         if not self.arg_length_matches(args):
             return []
         
-        details = args[1].split('@')
-        gpu_usage = details[1][1:-1]
+        (percent, _, freq) = args[1].partition('@')
+        output = []
 
-        output = [
-            ("GPU Activation time (%)", int(details[0][:-1]))
-        ]
+        if percent != "":
+            percent = percent.replace("%", "")
+            output = [
+                ("GPU Activation time (%)", int(percent))
+            ]
 
-        if '[' not in details[1]:
-            output.append(
-                ("GPU Clock (MHz)", int(details[1]))
-            )
-        else:
-            for (idx, gpu_clock) in enumerate(gpu_usage.split(',')):
+        if freq != "":
+            if '[' not in freq:
                 output.append(
-                    (f"GPU{idx} Clock (MHz)", int(gpu_clock))
+                    ("GPU Clock (MHz)", int(freq))
                 )
+            else:
+                for (idx, gpu_clock) in enumerate(freq[1:-1].split(',')):
+                    output.append(
+                        (f"GPU{idx} Clock (MHz)", int(gpu_clock))
+                    )
 
         return output
 
