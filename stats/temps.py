@@ -9,7 +9,7 @@ class TemperatureStat(NvidiaStat):
     _num_args = 1
 
     def matches(self, arg: str) -> bool:
-        target_regex = '[A-Za-z0-9]+@[0-9]+\.[0-9]+C'
+        target_regex = r'[A-Za-z0-9]+@(-)?[0-9]+(\.[0-9]+)?C'
 
         return re.match(target_regex, arg) is not None
     
