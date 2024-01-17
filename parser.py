@@ -33,10 +33,16 @@ def get_keys(file: str, stats_container: stats.StatContainer) -> List[str]:
             args = line.strip().split(' ')
 
             for i in range(len(args)):
-                stat = stats_container.find_stat(args[i])
+                final_stat = None
+                stat_args = []
+                for stat_cont in stats_container.find_stat(args[i]):         
+                    #Done to support backwards matching (IE easier to match against the 2nd+ arg instead of the first)
+                    stat_args = build_args(args, stat_cont, i)
+                    if stat_cont.args_match(stat_args):
+                        final_stat = stat_cont
 
-                if stat is not None:
-                    data = stat.parse(build_args(args, stat, i))
+                if final_stat is not None:
+                    data = final_stat.parse(build_args(args, final_stat, i))
                     for key in data:
                         keyname = key[0]
 
@@ -48,6 +54,7 @@ def get_keys(file: str, stats_container: stats.StatContainer) -> List[str]:
 
 
 def parse_file(input_file: str):
+    logger = logging.getLogger(__package__)
     cont = stats.StatContainer()
     with open(input_file, 'r') as f:
         lines = f.readlines()
@@ -64,16 +71,18 @@ def parse_file(input_file: str):
         
         for i in range(len(args)):
             key = args[i]
-            stat_cont = cont.find_stat(key)
+            final_stat = None
+            stat_args = []
+            for stat_cont in cont.find_stat(key):         
+                #Done to support backwards matching (IE easier to match against the 2nd+ arg instead of the first)
+                stat_args = build_args(args, stat_cont, i)
+                if stat_cont.args_match(stat_args):
+                    final_stat = stat_cont
 
-            if stat_cont is None:
+            if final_stat is None:
+                logger.debug(f"Could not find match for {key}")
                 continue
-            
-            #Done to support backwards matching (IE easier to match against the 2nd+ arg instead of the first)
-            stat_args = build_args(args, stat_cont, i)
-            if not stat_cont.args_match(stat_args): #TODO Remove this, this is for debug only
-                print("WARN: Stat args don't match!")
-            data = stat_cont.parse(stat_args)
+            data = final_stat.parse(stat_args)
 
             for entry in data:
                 header = entry[0]

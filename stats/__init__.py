@@ -22,10 +22,9 @@ class StatContainer:
             power.PowerStat()
         ]
     
-    def find_stat(self, identifier) -> Union[NvidiaStat, None]:
+    def find_stat(self, identifier) -> NvidiaStat:
         logger = logging.getLogger(__package__)
         for stat in self.stats:
             if stat.matches(identifier):
                 logger.info(f"Found match for identifier {stat.header()}: {identifier}")
-                return stat
-        return None
+                yield stat
